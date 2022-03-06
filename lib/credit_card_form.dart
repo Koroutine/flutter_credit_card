@@ -4,6 +4,7 @@ import 'package:flutter_credit_card/flutter_credit_card.dart';
 
 import 'credit_card_model.dart';
 import 'flutter_credit_card.dart';
+import 'package:jiffy/jiffy.dart';
 
 class CreditCardForm extends StatefulWidget {
   const CreditCardForm({
@@ -173,8 +174,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
         primaryColorDark: themeColor,
       ),
       child: Form(
+      
         key: widget.formKey,
-        child: Column(
+        child: AutofillGroup(child:Column(
           children: <Widget>[
             Visibility(
               visible: widget.isCardNumberVisible,
@@ -238,7 +240,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           final List<String> date = value.split(RegExp(r'/'));
                           final int month = int.parse(date.first);
                           final int year = int.parse('20${date.last}');
-                          final DateTime cardDate = DateTime(year, month);
+                          final int lastDayofMonth = DateTime(year, Jiffy( DateTime(year,month)).add(months: 1).month, 0 ).day;
+                          final DateTime cardDate = DateTime(year, month, lastDayofMonth);
 
                           if (cardDate.isBefore(now) ||
                               month > 12 ||
@@ -319,7 +322,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               ),
             ),
           ],
-        ),
+        )),
       ),
     );
   }
