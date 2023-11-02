@@ -41,6 +41,8 @@ class CreditCardForm extends StatefulWidget {
     this.isHolderNameVisible = true,
     this.isCardNumberVisible = true,
     this.isExpiryDateVisible = true,
+    this.cardHolderLength,
+    this.cardHolderValidationMessage = 'Maximum length is 30',
   }) : super(key: key);
 
   final String cardNumber;
@@ -50,6 +52,7 @@ class CreditCardForm extends StatefulWidget {
   final String cvvValidationMessage;
   final String dateValidationMessage;
   final String numberValidationMessage;
+  final String cardHolderValidationMessage;
   final void Function(CreditCardModel) onCreditCardModelChange;
   final Color themeColor;
   final Color textColor;
@@ -59,6 +62,8 @@ class CreditCardForm extends StatefulWidget {
   final bool isHolderNameVisible;
   final bool isCardNumberVisible;
   final bool isExpiryDateVisible;
+  // optional cardHolderLength param, if provided, will do validation
+  final int? cardHolderLength;
   final GlobalKey<FormState> formKey;
 
   final InputDecoration cardNumberDecoration;
@@ -317,6 +322,12 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   onEditingComplete: () {
                     FocusScope.of(context).unfocus();
                     onCreditCardModelChange(creditCardModel);
+                  },
+                  validator: (String? value) {
+                    if (widget.cardHolderLength != null && value!.length > widget.cardHolderLength!) {
+                      return widget.cardHolderValidationMessage;
+                    }
+                    return null;
                   },
                 ),
               ),
